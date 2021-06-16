@@ -52,13 +52,13 @@ class ProductOverviewScreen extends StatelessWidget {
         itemBuilder: (ctx, i) => ProductItem(
           loadedPro[i].id,
           loadedPro[i].title,
-          loadedPro[i].description,
           loadedPro[i].imageUrl,
-          loadedPro[i].price,
         ),
         padding: EdgeInsets.all(20),
       ),
-      appBar: AppBar(title: Text("My Bazaar"),),
+      appBar: AppBar(
+        title: Text("My Bazaar"),
+      ),
     );
   }
 }
