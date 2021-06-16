@@ -23,9 +23,17 @@ class ProductItem extends StatelessWidget {
       ),
       footer: GridTileBar(
         backgroundColor: Colors.black54,
-        leading: Icon(Icons.favorite),
+        leading: IconButton(
+          icon: Icon(Icons.favorite),
+          onPressed: () {},
+        ),
         title: Text(title),
-        trailing: Icon(Icons.shopping_cart),
+        trailing: IconButton(
+          icon: Icon(
+            Icons.shopping_bag,
+          ),
+          onPressed: () {},
+        ),
       ),
     );
   }
