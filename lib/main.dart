@@ -5,6 +5,7 @@ import './providers/cart.dart';
 import './providers/products_data_provider.dart';
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
+import './screens/cart_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,7 +22,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
-        
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         home: ProductOverviewScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+          CartScreen.routeName: (ctx) => CartScreen(),
         },
       ),
     );

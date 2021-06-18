@@ -7,7 +7,7 @@ class Badge extends StatelessWidget {
   Badge({
     required this.child,
     required this.value,
-    this.color= Colors.black,
+    this.color = Colors.black,
   });
 
   @override
@@ -24,7 +24,7 @@ class Badge extends StatelessWidget {
             // color: Theme.of(context).accentColor,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: color != null ? color : Theme.of(context).accentColor,
+              color: Theme.of(context).accentColor,
             ),
             constraints: BoxConstraints(
               minWidth: 16,
