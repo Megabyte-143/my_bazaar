@@ -15,7 +15,7 @@ class OrderItem {
   });
 }
 
-class Orders with ChangeNotifier {
+class OrdersDataProvider with ChangeNotifier {
   List<OrderItem> _orders = [];
   List<OrderItem> get orders {
     return [..._orders];
