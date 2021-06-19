@@ -1,6 +1,6 @@
 # my_bazaar
 
-A new Flutter project.
+A Dummy Shopping App
 
 ## Getting Started
 

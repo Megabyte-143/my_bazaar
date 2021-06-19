@@ -8,8 +8,8 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          Container(
-            child: Text("HEllo Friend"),
+          AppBar(
+            title: Text("HEllo Friend"),
           ),
           Divider(),
           ListTile(
