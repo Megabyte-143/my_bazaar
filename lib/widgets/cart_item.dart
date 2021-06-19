@@ -28,10 +28,34 @@ class CartItem extends StatelessWidget {
               vertical: 5,
             ),
           ),
+          confirmDismiss: (direction) {
+            return showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                content: Text("Sochle, sasta  h khareed ni rha fir?"),
+                title: Text("Are You Sure"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(false);
+                    },
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(true);
+                    },
+                    child: Text('Yes'),
+                  ),
+                ],
+              ),
+            );
+          },
           onDismissed: (
             direction,
           ) {
-            Provider.of<CartDataProvider>(context, listen: false).removeItem(key[i]);
+            Provider.of<CartDataProvider>(context, listen: false)
+                .removeItem(key[i]);
           },
           child: Card(
             margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
