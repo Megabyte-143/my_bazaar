@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/cart.dart' show Cart;
+import '../providers/cart_data_provider.dart' show CartDataProvider;
 
 class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context);
+    final cart = Provider.of<CartDataProvider>(context);
     final List cartItems = cart.items.values.toList();
     final List key = cart.items.keys.toList();
     return Expanded(
@@ -31,7 +31,7 @@ class CartItem extends StatelessWidget {
           onDismissed: (
             direction,
           ) {
-            Provider.of<Cart>(context, listen: false).removeItem(key[i]);
+            Provider.of<CartDataProvider>(context, listen: false).removeItem(key[i]);
           },
           child: Card(
             margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),

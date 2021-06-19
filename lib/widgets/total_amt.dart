@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/cart.dart';
+import '../providers/cart_data_provider.dart';
 
 class TotalAmt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context);
+    final cart = Provider.of<CartDataProvider>(context);
     return Card(
       margin: EdgeInsets.all(15),
       child: Padding(

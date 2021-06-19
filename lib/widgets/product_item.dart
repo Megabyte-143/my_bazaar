@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_data_provider.dart';
-import '../providers/cart.dart';
+import '../providers/cart_data_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<ProductDataProvider>(context);
-    final cart = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<CartDataProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
