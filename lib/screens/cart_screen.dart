@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/cart_item.dart';
-import '../widgets/total_amt.dart';
+import '../widgets/total_amt_order.dart';
 
 
 class CartScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          TotalAmt(),
+          TotalAmtOrder(),
           SizedBox(
             height: 10,
           ),

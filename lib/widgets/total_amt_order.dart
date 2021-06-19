@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_data_provider.dart';
+import '../providers/orders_data_provider.dart';
 
-class TotalAmt extends StatelessWidget {
+class TotalAmtOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartDataProvider>(context);
@@ -30,7 +31,14 @@ class TotalAmt extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<OrdersDataProvider>(context, listen: false)
+                    .addProducts(
+                  cart.items.values.toList(),
+                  cart.totalAmount,
+                );
+                cart.clear();
+              },
               child: Text(
                 'Order Now',
               ),
