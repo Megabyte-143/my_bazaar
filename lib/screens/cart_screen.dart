@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/cart_item.dart';
 import '../widgets/total_amt_order.dart';
-
+import '../widgets/app_drawer.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "/cartscreen";
@@ -16,6 +16,7 @@ class CartScreen extends StatelessWidget {
           "Your Cart",
         ),
       ),
+      drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           TotalAmtOrder(),
