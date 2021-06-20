@@ -61,4 +61,19 @@ class ProductsDataProvider with ChangeNotifier {
     _items.add(addProduct);
     notifyListeners();
   }
+
+  void updateProduct(String id, ProductDataProvider newProduct) {
+    final prodId = _items.indexWhere((element) => element.id == id);
+    if (prodId >= 0) {
+      _items[prodId] = newProduct;
+      notifyListeners();
+    } else {
+      print("...");
+    }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }

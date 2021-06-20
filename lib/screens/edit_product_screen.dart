@@ -24,6 +24,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
     price: 0.0,
   );
   var _isInit = true;
+
+  var _initVal = {
+    "title": '',
+    "description": '',
+    "price": "",
+    "imageUrl": '',
+  };
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(updateImageUrl);
@@ -34,8 +42,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       final productId = ModalRoute.of(context)!.settings.arguments as String;
-      _editedProduct = Provider.of<ProductsDataProvider>(context, listen: false)
-          .findById(productId);
+      if (productId != null) {
+        _editedProduct =
+            Provider.of<ProductsDataProvider>(context, listen: false)
+                .findById(productId);
+        _initVal = {
+          "title": _editedProduct.title,
+          "description": _editedProduct.description,
+          "price": _editedProduct.price.toString(),
+          "imageUrl": "",
+        };
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -56,9 +74,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!validForm) {
       return;
     }
+
     _form.currentState!.save();
-    Provider.of<ProductsDataProvider>(context, listen: false)
-        .addProductDataProvider(_editedProduct);
+    if (_editedProduct.id != null) {
+      Provider.of<ProductsDataProvider>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+    } else {
+      Provider.of<ProductsDataProvider>(context, listen: false)
+          .addProductDataProvider(_editedProduct);
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -94,6 +119,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _initVal['title'],
                 decoration: InputDecoration(labelText: "Title"),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -107,7 +133,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value) {
                   _editedProduct = ProductDataProvider(
-                    id: '',
+                    id: _editedProduct.id,
+                    isFav: _editedProduct.isFav,
                     title: value.toString(),
                     description: _editedProduct.description,
                     imageUrl: _editedProduct.imageUrl,
@@ -116,6 +143,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initVal['price'],
                 decoration: InputDecoration(labelText: "Price"),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -137,7 +165,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value) {
                   _editedProduct = ProductDataProvider(
-                    id: '',
+                    id: _editedProduct.id,
+                    isFav: _editedProduct.isFav,
                     title: _editedProduct.title,
                     description: _editedProduct.description,
                     imageUrl: _editedProduct.imageUrl,
@@ -146,13 +175,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initVal['description'],
                 decoration: InputDecoration(labelText: "Description"),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
                 onSaved: (value) {
                   _editedProduct = ProductDataProvider(
-                    id: '',
+                    id: _editedProduct.id,
+                    isFav: _editedProduct.isFav,
                     title: _editedProduct.title,
                     description: value.toString(),
                     imageUrl: _editedProduct.imageUrl,
@@ -204,7 +235,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = ProductDataProvider(
-                          id: '',
+                          id: _editedProduct.id,
+                          isFav: _editedProduct.isFav,
                           title: _editedProduct.title,
                           description: _editedProduct.description,
                           imageUrl: value.toString(),
@@ -219,10 +251,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             !value.startsWith("https")) {
                           return "Please provide valid URL";
                         }
-                        if (value.endsWith(".png") ||
-                            value.endsWith(".jpg") ||
-                            value.endsWith(".jpeg")) {
-                          return "Please provide valid URL";
+                        if (!value.endsWith(".png") ||
+                            !value.endsWith(".jpg") ||
+                            !value.endsWith(".jpeg")) {
+                          return "Please provide valid1 URL";
                         }
                         return null;
                       },
