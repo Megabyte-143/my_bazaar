@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../providers/products_data_provider.dart';
 import '../providers/product_data_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
@@ -21,10 +23,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
     price: 0.0,
   );
+  var _isInit = true;
   @override
   void initState() {
     _imageUrlFocusNode.addListener(updateImageUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context)!.settings.arguments as String;
+      _editedProduct = Provider.of<ProductsDataProvider>(context, listen: false)
+          .findById(productId);
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -43,9 +57,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState!.save();
-    print(_editedProduct.title);
-    print(_editedProduct.description);
-    print(_editedProduct.price);
+    Provider.of<ProductsDataProvider>(context, listen: false)
+        .addProductDataProvider(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   void updateImageUrl() {

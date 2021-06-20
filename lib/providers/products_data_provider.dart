@@ -51,8 +51,14 @@ class ProductsDataProvider with ChangeNotifier {
         .firstWhere((productDataProvider) => productDataProvider.id == id);
   }
 
-  void addProductDataProvider() {
-    //_items.add(value);
+  void addProductDataProvider(ProductDataProvider product) {
+    final addProduct = ProductDataProvider(
+        id: DateTime.now().toString(),
+        title: product.title,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price);
+    _items.add(addProduct);
     notifyListeners();
   }
 }
