@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import "package:http/http.dart" as http;
+import 'dart:convert';
 import './product_data_provider.dart';
 
 class ProductsDataProvider with ChangeNotifier {
@@ -52,14 +54,29 @@ class ProductsDataProvider with ChangeNotifier {
   }
 
   void addProductDataProvider(ProductDataProvider product) {
-    final addProduct = ProductDataProvider(
-        id: DateTime.now().toString(),
-        title: product.title,
-        description: product.description,
-        imageUrl: product.imageUrl,
-        price: product.price);
-    _items.add(addProduct);
-    notifyListeners();
+    const url =
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json';
+    http
+        .post(
+      Uri.parse(url),
+      body: json.encode({
+        "title": product.title,
+        "description": product.description,
+        "price": product.description,
+        "imageUrl": product.imageUrl,
+        "isFav": product.isFav,
+      }),
+    )
+        .then((response) {
+      final addProduct = ProductDataProvider(
+          id: json.decode(response.body)['name'],
+          title: product.title,
+          description: product.description,
+          imageUrl: product.imageUrl,
+          price: product.price);
+      _items.add(addProduct);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String id, ProductDataProvider newProduct) {
