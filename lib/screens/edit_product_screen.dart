@@ -71,7 +71,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final validForm = _form.currentState!.validate();
     if (!validForm) {
       return;
@@ -90,14 +90,30 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.of(context).pop();
     } else {
-      Provider.of<ProductsDataProvider>(context, listen: false)
-          .addProductDataProvider(_editedProduct)
-          .then((value) {
+      try {
+        await Provider.of<ProductsDataProvider>(context, listen: false)
+            .addProductDataProvider(_editedProduct);
+      } catch (error) {
+        await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("Please Wait"),
+                  content: Text("something Went Wrong"),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Text("Okay"),
+                    )
+                  ],
+                ));
+      } finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
+      }
     }
   }
 
@@ -240,7 +256,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               : FittedBox(
                                   child:
                                       Image.network(_imageUrlController.text),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                         ),
                         Expanded(

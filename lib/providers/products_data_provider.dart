@@ -54,22 +54,21 @@ class ProductsDataProvider with ChangeNotifier {
     );
   }
 
-  Future<void> addProductDataProvider(ProductDataProvider product) {
+  Future<void> addProductDataProvider(ProductDataProvider product) async {
     const url =
         'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json';
-    return http
-        .post(
-      Uri.parse(url),
-      body: json.encode({
-        "title": product.title,
-        "description": product.description,
-        "price": product.description,
-        "imageUrl": product.imageUrl,
-        "isFav": product.isFav,
-      }),
-    )
-        .then((response) {
-      print(json.decode(response.body));
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode({
+          "title": product.title,
+          "description": product.description,
+          "price": product.description,
+          "imageUrl": product.imageUrl,
+          "isFav": product.isFav,
+        }),
+      );
+
       final addProduct = ProductDataProvider(
           id: json.decode(response.body)['name'],
           title: product.title,
@@ -78,7 +77,9 @@ class ProductsDataProvider with ChangeNotifier {
           price: product.price);
       _items.add(addProduct);
       notifyListeners();
-    });
+    } catch (error) {
+      throw error;
+    }
   }
 
   void updateProduct(String id, ProductDataProvider newProduct) {
