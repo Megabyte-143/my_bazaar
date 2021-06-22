@@ -41,8 +41,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final productId = ModalRoute.of(context)!.settings.arguments as String;
-      if (productId != null) {
+      final productId = ModalRoute.of(context)!.settings.arguments.toString();
+      if (productId != '') {
         _editedProduct =
             Provider.of<ProductsDataProvider>(context, listen: false)
                 .findById(productId);
@@ -50,7 +50,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           "title": _editedProduct.title,
           "description": _editedProduct.description,
           "price": _editedProduct.price.toString(),
-          "imageUrl": "",
+          "imageUrl": '',
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
@@ -76,7 +76,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
 
     _form.currentState!.save();
-    if (_editedProduct.id != null) {
+    if (_editedProduct.id != '') {
       Provider.of<ProductsDataProvider>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
     } else {
@@ -245,16 +245,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please Provide a value";
+                          return 'Please enter an image URL.';
                         }
-                        if (!value.startsWith("http") ||
-                            !value.startsWith("https")) {
-                          return "Please provide valid URL";
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('https')) {
+                          return 'Please enter a valid URL.';
                         }
-                        if (!value.endsWith(".png") ||
-                            !value.endsWith(".jpg") ||
-                            !value.endsWith(".jpeg")) {
-                          return "Please provide valid1 URL";
+                        if (!value.endsWith('.png') &&
+                            !value.endsWith('.jpg') &&
+                            !value.endsWith('.jpeg')) {
+                          return 'Please enter a valid image URL.';
                         }
                         return null;
                       },
