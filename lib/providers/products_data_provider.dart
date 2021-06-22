@@ -49,8 +49,8 @@ class ProductsDataProvider with ChangeNotifier {
   }
 
   ProductDataProvider findById(String id) {
-    return _items.firstWhere(
-        (productDataProvider) => productDataProvider.id == id);
+    return _items
+        .firstWhere((productDataProvider) => productDataProvider.id == id,);
   }
 
   void addProductDataProvider(ProductDataProvider product) {
