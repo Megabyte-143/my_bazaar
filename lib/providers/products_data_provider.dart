@@ -49,14 +49,15 @@ class ProductsDataProvider with ChangeNotifier {
   }
 
   ProductDataProvider findById(String id) {
-    return _items
-        .firstWhere((productDataProvider) => productDataProvider.id == id,);
+    return _items.firstWhere(
+      (productDataProvider) => productDataProvider.id == id,
+    );
   }
 
-  void addProductDataProvider(ProductDataProvider product) {
+  Future<void> addProductDataProvider(ProductDataProvider product) {
     const url =
         'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json';
-    http
+    return http
         .post(
       Uri.parse(url),
       body: json.encode({
@@ -68,6 +69,7 @@ class ProductsDataProvider with ChangeNotifier {
       }),
     )
         .then((response) {
+      print(json.decode(response.body));
       final addProduct = ProductDataProvider(
           id: json.decode(response.body)['name'],
           title: product.title,
