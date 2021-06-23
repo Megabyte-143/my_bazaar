@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
-import 'dart:convert';
+
 import './product_data_provider.dart';
 import '../models/htpp_expection.dart';
 
@@ -64,9 +66,9 @@ class ProductsDataProvider with ChangeNotifier {
 
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<ProductDataProvider> loadedProducts = [];
-      if (extractedData == null) {
-        return;
-      }
+      // if (extractedData == null) {
+      //   return;
+      // }
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(ProductDataProvider(
           id: prodId,
