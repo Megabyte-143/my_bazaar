@@ -26,10 +26,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-  var _initVal = {
+  Map<String, dynamic> _initVal = {
     "title": '',
     "description": '',
-    "price": "",
+    "price": 0.0,
     "imageUrl": '',
   };
 
@@ -51,7 +51,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         _initVal = {
           "title": _editedProduct.title,
           "description": _editedProduct.description,
-          "price": _editedProduct.price.toString(),
+          "price": _editedProduct.price,
           "imageUrl": '',
         };
         _imageUrlController.text = _editedProduct.imageUrl;
@@ -83,12 +83,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
 
     if (_editedProduct.id != '') {
-      Provider.of<ProductsDataProvider>(context, listen: false)
+      await Provider.of<ProductsDataProvider>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<ProductsDataProvider>(context, listen: false)
@@ -108,13 +104,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     )
                   ],
                 ));
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
+      // finally {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Navigator.of(context).pop();
+      // }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   void updateImageUrl() {
@@ -177,7 +178,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                     ),
                     TextFormField(
-                      initialValue: _initVal['price'],
+                      initialValue: _initVal['price'].toString(),
                       decoration: InputDecoration(labelText: "Price"),
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
@@ -196,6 +197,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         if (double.parse(value) <= 0) {
                           return "Please Enter value greater than zero.";
                         }
+                        // if (!double.parse(value).) {
+                        //   return "Please add a decimal value";
+                        // }
                         return null;
                       },
                       onSaved: (value) {

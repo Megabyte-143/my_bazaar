@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/cart_screen.dart';
 import '../providers/cart_data_provider.dart';
+import '../providers/products_data_provider.dart';
 import '../widgets/badge.dart';
 import '../widgets/product_gird.dart';
 import '../widgets/app_drawer.dart';
@@ -19,6 +20,32 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showFavOnly = false;
+  var _initState = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // Provider.of<ProductsDataProvider>(context).fetchAndaddData(); //Can't use context in init state
+    // Future.delayed(Duration.zero).then((value) =>
+    //     Provider.of<ProductsDataProvider>(context).fetchAndaddData());// will change the order of execution
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_initState) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductsDataProvider>(context).fetchAndaddData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _initState = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +90,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductGrid(_showFavOnly),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductGrid(_showFavOnly),
     );
   }
 }
