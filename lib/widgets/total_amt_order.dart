@@ -30,21 +30,51 @@ class TotalAmtOrder extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Provider.of<OrdersDataProvider>(context, listen: false)
-                    .addProducts(
-                  cart.items.values.toList(),
-                  cart.totalAmount,
-                );
-                cart.clear();
-              },
-              child: Text(
-                'Order Now',
-              ),
-            ),
+            OrderButton(cart: cart),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final CartDataProvider cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: (widget.cart.totalAmount <= 0.0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+                print("setState1");
+              });
+              await Provider.of<OrdersDataProvider>(context, listen: false)
+                  .addProducts(
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmount,
+              );
+              setState(() {
+                _isLoading = false;
+                print("setState2");
+              });
+              widget.cart.clear();
+            },
+      child: _isLoading? CircularProgressIndicator(): Text(
+        'Order Now',
       ),
     );
   }
