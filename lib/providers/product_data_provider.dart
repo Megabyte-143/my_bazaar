@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProductDataProvider with ChangeNotifier {
   final String id;
@@ -18,8 +20,30 @@ class ProductDataProvider with ChangeNotifier {
     this.isFav = false,
   });
 
-  void toggleFav() {
+  void _favStatus(bool newState) {
+    isFav = newState;
+    notifyListeners();
+  }
+
+  Future<void> toggleFav() async {
+    final oldStatus = isFav;
+
     isFav = !isFav;
     notifyListeners();
+    final url =
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products/$id.json';
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        body: json.encode({
+          'isFav': oldStatus,
+        }),
+      );
+      if (response.statusCode >= 400) {
+        _favStatus(oldStatus);
+      }
+    } catch (error) {
+      _favStatus(oldStatus);
+    }
   }
 }
