@@ -51,7 +51,7 @@ class OrdersDataProvider with ChangeNotifier {
                   ))
               .toList()));
     });
-    _orders = loadedOrders;
+    _orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
 
@@ -77,7 +77,7 @@ class OrdersDataProvider with ChangeNotifier {
               })
           .toList(),
     });
-    await http.patch(
+    final response=await http.put(
       Uri.parse(url),
       body: json.encode(extractedData),
     );
