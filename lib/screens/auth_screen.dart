@@ -1,13 +1,14 @@
-
 import 'dart:math';
 
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import '../models/htpp_expection.dart';
 import 'package:flutter/material.dart';
 
 enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -60,7 +61,10 @@ class AuthScreen extends StatelessWidget {
                       child: Text(
                         'MyShop',
                         style: TextStyle(
-                          color: Theme.of(context).accentTextTheme.headline6!.color,
+                          color: Theme.of(context)
+                              .accentTextTheme
+                              .headline6!
+                              .color,
                           fontSize: 50,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
@@ -92,6 +96,23 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  void _errorMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              content: Text(message),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Okay!"),
+                ),
+              ],
+              title: Text("An Error Occured"),
+            ));
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -101,7 +122,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -110,10 +131,37 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false).login(
+          _authData['email'].toString(),
+          _authData['password'].toString(),
+        );
+      } else {
+        // Sign user up
+        await Provider.of<Auth>(context, listen: false).signUp(
+          _authData['email'].toString(),
+          _authData['password'].toString(),
+        );
+      }
+    } on HttpException catch (error) {
+      var errorMessage = "Couldn't Authenticate";
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = "Emil Already Exists";
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = "Entered Email not found";
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = "Enter A Strong Password";
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = "Enter a Valid Email";
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = "Entered Inccorect Password ";
+      }
+      _errorMessage(errorMessage);
+    } catch (error) {
+      const errorMessage = "Couldn't Authenticate.Please Try Again Later";
+      _errorMessage(errorMessage);
     }
     setState(() {
       _isLoading = false;
@@ -159,7 +207,6 @@ class _AuthCardState extends State<AuthCard> {
                       return 'Invalid email!';
                     }
                     return null;
-                  
                   },
                   onSaved: (value) {
                     _authData['email'] = value!;

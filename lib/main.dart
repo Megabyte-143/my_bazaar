@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import './providers/cart_data_provider.dart';
 import './providers/products_data_provider.dart';
 import './providers/orders_data_provider.dart';
+import './providers/auth_provider.dart';
+
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './screens/cart_screen.dart';
@@ -11,6 +13,7 @@ import './screens/order_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/auth_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -20,6 +23,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => ProductsDataProvider(),
         ),
@@ -41,9 +48,9 @@ class MyApp extends StatelessWidget {
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
-          OrderScreen.routename: (ctx)=> OrderScreen(),
-          UserProductScreen.routename:(ctx)=>UserProductScreen(),
-          EditProductScreen.routename:(ctx)=> EditProductScreen(),
+          OrderScreen.routename: (ctx) => OrderScreen(),
+          UserProductScreen.routename: (ctx) => UserProductScreen(),
+          EditProductScreen.routename: (ctx) => EditProductScreen(),
         },
       ),
     );
