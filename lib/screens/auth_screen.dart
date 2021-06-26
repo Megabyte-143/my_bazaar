@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:convert';
 
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -96,23 +97,6 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
-  void _errorMessage(String message) {
-    showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              content: Text(message),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("Okay!"),
-                ),
-              ],
-              title: Text("An Error Occured"),
-            ));
-  }
-
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -121,6 +105,24 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
+
+  void _errorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: Text("Okay!"),
+          ),
+        ],
+        title: Text("An Error Occured"),
+      ),
+    );
+  }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
@@ -151,17 +153,14 @@ class _AuthCardState extends State<AuthCard> {
         errorMessage = "Emil Already Exists";
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = "Entered Email not found";
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = "Enter A Strong Password";
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = "Enter a Valid Email";
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
+      }  else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = "Entered Inccorect Password ";
       }
       _errorMessage(errorMessage);
     } catch (error) {
       const errorMessage = "Couldn't Authenticate.Please Try Again Later";
       _errorMessage(errorMessage);
+      print((error));
     }
     setState(() {
       _isLoading = false;

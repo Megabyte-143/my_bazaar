@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
@@ -37,21 +36,23 @@ class MyApp extends StatelessWidget {
           create: (ctx) => OrdersDataProvider(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.amber,
-          fontFamily: 'Anton',
+      child: Consumer<Auth>( 
+        builder: (context, auth, _) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.purple,
+            accentColor: Colors.amber,
+            fontFamily: 'Anton',
+          ),
+          home:  auth.isAuth? ProductOverviewScreen():AuthScreen(),
+          routes: {
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
+            OrderScreen.routename: (ctx) => OrderScreen(),
+            UserProductScreen.routename: (ctx) => UserProductScreen(),
+            EditProductScreen.routename: (ctx) => EditProductScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrderScreen.routename: (ctx) => OrderScreen(),
-          UserProductScreen.routename: (ctx) => UserProductScreen(),
-          EditProductScreen.routename: (ctx) => EditProductScreen(),
-        },
       ),
     );
   }

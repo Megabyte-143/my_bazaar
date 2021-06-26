@@ -77,7 +77,7 @@ class OrdersDataProvider with ChangeNotifier {
               })
           .toList(),
     });
-    final response=await http.put(
+    await http.put(
       Uri.parse(url),
       body: json.encode(extractedData),
     );
