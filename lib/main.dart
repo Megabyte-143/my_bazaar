@@ -8,10 +8,10 @@ import './providers/auth_provider.dart';
 
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
-import './screens/cart_screen.dart';
-import './screens/order_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
+import './screens/order_screen.dart';
+import './screens/cart_screen.dart';
 import './screens/auth_screen.dart';
 
 void main() {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductsDataProvider>(
-          create: (ctx)=> ProductsDataProvider('',[]),
+          create: (ctx) => ProductsDataProvider('', []),
           update: (ctx, auth, previousItems) => ProductsDataProvider(
               auth.token, previousItems == null ? [] : previousItems.items),
         ),

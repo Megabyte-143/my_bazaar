@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class Auth with ChangeNotifier {
   String _token = "";
-  late String _userId;
+  String _userId = "";
   DateTime _expirayDate = DateTime.now();
 
   bool get isAuth {
