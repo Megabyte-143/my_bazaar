@@ -15,7 +15,7 @@ class Auth with ChangeNotifier {
   String get token {
     if (_token != "" &&
         _expirayDate != DateTime.now() &&
-        _expirayDate.isAfter(DateTime.now())) {
+        (_expirayDate.isAfter(DateTime.now()))) {
       return _token;
     }
     return '';
@@ -33,13 +33,12 @@ class Auth with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       print(responseData['error']);
-      if (responseData['error'] != null
-      ) {
+      if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
       _token = responseData['idToken'];
-      _expirayDate = responseData[DateTime.now()
-          .add(Duration(seconds: int.parse(responseData['expiresIn'])))];
+      _expirayDate = DateTime.now()
+          .add(Duration(seconds: int.parse(responseData['expiresIn'])));
       _userId = responseData['localId'];
       notifyListeners();
     } catch (error) {
