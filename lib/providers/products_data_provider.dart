@@ -42,10 +42,9 @@ class ProductsDataProvider with ChangeNotifier {
     // ),
   ];
   final String authToken;
+  final String userId;
 
-  
-
-  ProductsDataProvider(this.authToken,this._items);
+  ProductsDataProvider(this.authToken, this.userId, this._items);
   var showFavOnly = false;
   List<ProductDataProvider> get favItems {
     return _items.where((prodId) => prodId.isFav).toList();
@@ -62,7 +61,7 @@ class ProductsDataProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndaddData() async {
-    final url =
+    var url =
         'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json?auth=$authToken';
 
     try {
@@ -73,14 +72,20 @@ class ProductsDataProvider with ChangeNotifier {
       // if (extractedData == null) {
       //   return;
       // }
+      url =
+          'https://my-bazaar-fe792-default-rtdb.firebaseio.com/usersFav/$userId.json?auth=$authToken';
+      final favResponse = await http.get(Uri.parse(url));
+      final favResponseData = json.decode(favResponse.body);
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(ProductDataProvider(
-          id: prodId,
-          title: prodData['title'],
-          imageUrl: prodData['imageUrl'],
-          price: (prodData['price']),
-          description: prodData['description'],
-        ));
+            id: prodId,
+            title: prodData['title'],
+            imageUrl: prodData['imageUrl'],
+            price: (prodData['price']),
+            description: prodData['description'],
+            isFav: favResponseData == null
+                ? false
+                : favResponseData[prodId] ?? false));
       });
       _items = loadedProducts;
       notifyListeners();

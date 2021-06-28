@@ -27,19 +27,17 @@ class ProductDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFav(String authToken) async {
+  Future<void> toggleFav(String authToken, String userId) async {
     final oldStatus = isFav;
 
     isFav = !isFav;
     notifyListeners();
     final url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/usersFav/$userId/$id.json?auth=$authToken';
     try {
-      final response = await http.patch(
+      final response = await http.put(
         Uri.parse(url),
-        body: json.encode({
-          'isFav': oldStatus,
-        }),
+        body: json.encode(isFav),
       );
       if (response.statusCode >= 400) {
         _favStatus(oldStatus);
