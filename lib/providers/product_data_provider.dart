@@ -8,6 +8,7 @@ class ProductDataProvider with ChangeNotifier {
   final String description;
   final String imageUrl;
   final double price;
+  // final authToken;
 
   bool isFav;
 
@@ -18,6 +19,7 @@ class ProductDataProvider with ChangeNotifier {
     required this.imageUrl,
     required this.price,
     this.isFav = false,
+    // this.authToken,
   });
 
   void _favStatus(bool newState) {
@@ -25,13 +27,13 @@ class ProductDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFav() async {
+  Future<void> toggleFav(String authToken) async {
     final oldStatus = isFav;
 
     isFav = !isFav;
     notifyListeners();
     final url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products/$id.json';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     try {
       final response = await http.patch(
         Uri.parse(url),

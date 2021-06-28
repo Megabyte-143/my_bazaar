@@ -20,14 +20,15 @@ class OrderItem {
 
 class OrdersDataProvider with ChangeNotifier {
   List<OrderItem> _orders = [];
-
+  final authToken;
+  OrdersDataProvider( this.authToken,this._orders,);
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fecthAndaddData() async {
-    const url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json';
+    final url =
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json?auth=$authToken';
 
     final response = await http.get(Uri.parse(url));
     final List<OrderItem> loadedOrders = [];
@@ -58,7 +59,7 @@ class OrdersDataProvider with ChangeNotifier {
   Future<void> addProducts(List<CartItem> cartProducts, double total) async {
     final timeStamp = DateTime.now();
     final url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json?auth=$authToken';
     final oldData = await http.get(Uri.parse(url));
 
     var extractedData = [];
