@@ -63,7 +63,7 @@ class _OrderButtonState extends State<OrderButton> {
                 print("setState1");
               });
               await Provider.of<OrdersDataProvider>(context, listen: false)
-                  .addProducts(
+                  .addOrders(
                 widget.cart.items.values.toList(),
                 widget.cart.totalAmount,
               );

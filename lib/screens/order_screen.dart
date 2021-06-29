@@ -17,7 +17,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future _obtainOrderFuture() {
     return Provider.of<OrdersDataProvider>(context, listen: false)
-        .fecthAndaddData();
+        .fecthAndSetOrders();
   }
 
   @override
