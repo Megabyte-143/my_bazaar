@@ -9,7 +9,7 @@ import './edit_product_screen.dart';
 class UserProductScreen extends StatelessWidget {
   static const routename = "/userproductscreen";
   Future<void> _refreshProducts(BuildContext context) async {
-    Provider.of<ProductsDataProvider>(context, listen: false)
+    await Provider.of<ProductsDataProvider>(context, listen: false)
         .fetchAndaddData(true);
   }
 
@@ -31,32 +31,35 @@ class UserProductScreen extends StatelessWidget {
       drawer: AppDrawer(),
       body: FutureBuilder(
         future: _refreshProducts(context),
-        builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting
-            ? Center(child: CircularProgressIndicator(),)
-            : RefreshIndicator( 
-                onRefresh: () => _refreshProducts(context),
-                child: Consumer<ProductsDataProvider>(
-                  builder: (ctx, productData, child) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: productData.items.length,
-                      itemBuilder: (ctx, i) => Padding(
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => _refreshProducts(context),
+                    child: Consumer<ProductsDataProvider>(
+                      builder: (ctx, productData, child) => Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: <Widget>[
-                            UserProduct(
-                              id: productData.items[i].id,
-                              imageUrl: productData.items[i].imageUrl,
-                              title: productData.items[i].title,
+                        child: ListView.builder(
+                          itemCount: productData.items.length,
+                          itemBuilder: (ctx, i) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                UserProduct(
+                                  id: productData.items[i].id,
+                                  imageUrl: productData.items[i].imageUrl,
+                                  title: productData.items[i].title,
+                                ),
+                                Divider(),
+                              ],
                             ),
-                            Divider(),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
       ),
     );
   }
