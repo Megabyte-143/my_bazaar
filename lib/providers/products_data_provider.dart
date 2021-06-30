@@ -60,9 +60,11 @@ class ProductsDataProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchAndaddData() async {
+  Future<void> fetchAndaddData([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -106,6 +108,7 @@ class ProductsDataProvider with ChangeNotifier {
           "price": product.price,
           "imageUrl": product.imageUrl,
           "isFav": product.isFav,
+          "creatorId": userId,
         }),
       );
 
