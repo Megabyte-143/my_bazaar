@@ -1,7 +1,9 @@
 import 'dart:convert';
-import '../models/htpp_expection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/htpp_expection.dart';
 
 class Auth with ChangeNotifier {
   String _token = "";
@@ -61,5 +63,12 @@ class Auth with ChangeNotifier {
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDIa9wlwiMFerAfIRX9R9Nc6UaWFLEjqK4";
 
     return _authenticate(userEmail, pass, url);
+  }
+
+  void logout() {
+    _token = '';
+    _userId = '';
+    _expirayDate = DateTime.now();
+    notifyListeners();
   }
 }
