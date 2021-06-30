@@ -21,8 +21,11 @@ class OrderItem {
 class OrdersDataProvider with ChangeNotifier {
   List<OrderItem> _orders = [];
   final authToken;
+  final userId;
+
   OrdersDataProvider(
     this.authToken,
+    this.userId,
     this._orders,
   );
   List<OrderItem> get orders {
@@ -31,11 +34,11 @@ class OrdersDataProvider with ChangeNotifier {
 
   Future<void> fecthAndSetOrders() async {
     final url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json?auth=$authToken';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
 
     final response = await http.get(Uri.parse(url));
     final List<OrderItem> loadedOrders = [];
-    Map<String, dynamic> extractedData={};
+    Map<String, dynamic> extractedData = {};
 
     if (json.decode(response.body) != null) {
       extractedData = json.decode(response.body);
@@ -108,7 +111,7 @@ class OrdersDataProvider with ChangeNotifier {
 // }
   Future<void> addOrders(List<CartItem> cartProducts, double total) async {
     final url =
-        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders.json?auth=$authToken';
+        'https://my-bazaar-fe792-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
     final timestamp = DateTime.now();
     await http.post(
       Uri.parse(url),
