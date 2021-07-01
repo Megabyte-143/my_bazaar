@@ -58,7 +58,7 @@ class Auth with ChangeNotifier {
         {
           'token': _token,
           'userId': _userId,
-          'expirayDate': _expirayDate,
+          'expirayDate': _expirayDate.toIso8601String(),
         },
       );
       prefs.setString('userData', userData);
@@ -86,11 +86,11 @@ class Auth with ChangeNotifier {
       return false;
     }
 
-    final extractedUserData =
-        prefs.getString('userData') as Map<String, dynamic>;
+    final extractedUserData = json
+        .decode(prefs.getString('userData').toString()) as Map<String, dynamic>;
     final expirayDate = DateTime.parse(extractedUserData['expirayDate']);
 
-    if (!expirayDate.isBefore(DateTime.now())) {
+    if (expirayDate.isBefore(DateTime.now())) {
       return false;
     }
 
@@ -99,6 +99,7 @@ class Auth with ChangeNotifier {
     _expirayDate = expirayDate;
 
     notifyListeners();
+    _autoLogout();
     return true;
   }
 
