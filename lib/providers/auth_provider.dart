@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/htpp_expection.dart';
 
@@ -11,7 +12,7 @@ class Auth with ChangeNotifier {
   String _userId = "";
   DateTime _expirayDate = DateTime.now();
 
-  Timer _authTimer=Timer(Duration(seconds: 0),(){});
+  Timer _authTimer = Timer(Duration(seconds: 0), () {});
 
   bool get isAuth {
     return token != '';
@@ -51,6 +52,16 @@ class Auth with ChangeNotifier {
       _userId = responseData['localId'];
       _autoLogout();
       notifyListeners();
+
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode(
+        {
+          'token': _token,
+          'userId': _userId,
+          'expirayDate': _expirayDate,
+        },
+      );
+      prefs.setString('userData', userData);
     } catch (error) {
       throw error;
     }
@@ -69,19 +80,44 @@ class Auth with ChangeNotifier {
     return _authenticate(userEmail, pass, url);
   }
 
-  void logout() {
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+
+    final extractedUserData =
+        prefs.getString('userData') as Map<String, dynamic>;
+    final expirayDate = DateTime.parse(extractedUserData['expirayDate']);
+
+    if (!expirayDate.isBefore(DateTime.now())) {
+      return false;
+    }
+
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
+    _expirayDate = expirayDate;
+
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> logout() async {
     _token = '';
     _userId = '';
     _expirayDate = DateTime.now();
-    if (_authTimer != Timer(Duration(seconds: 0),(){})) {
+    if (_authTimer != Timer(Duration(seconds: 0), () {})) {
       _authTimer.cancel();
-      _authTimer = Timer(Duration(seconds: 0),(){});
+      _authTimer = Timer(Duration(seconds: 0), () {});
     }
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    //prefs.remove('userData');  it willl clear only the userData if there are more data stored in that
+    prefs.clear(); // it will remove all the data in that
   }
 
   void _autoLogout() {
-    if (_authTimer != Timer(Duration(seconds: 0),(){})) {
+    if (_authTimer != Timer(Duration(seconds: 0), () {})) {
       _authTimer.cancel();
     }
 
