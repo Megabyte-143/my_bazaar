@@ -45,13 +45,15 @@ class ProductsDataProvider with ChangeNotifier {
   final String userId;
 
   ProductsDataProvider(this.authToken, this.userId, this._items);
+
   var showFavOnly = false;
-  List<ProductDataProvider> get favItems {
-    return _items.where((prodId) => prodId.isFav).toList();
-  }
 
   List<ProductDataProvider> get items {
     return [..._items];
+  }
+
+  List<ProductDataProvider> get favItems {
+    return _items.where((prodId) => prodId.isFav).toList();
   }
 
   ProductDataProvider findById(String id) {
@@ -60,7 +62,7 @@ class ProductsDataProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchAndaddData([bool filterByUser = false]) async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
     final filterString =
         filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
@@ -70,28 +72,31 @@ class ProductsDataProvider with ChangeNotifier {
       final response = await http.get(Uri.parse(url));
 
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<ProductDataProvider> loadedProducts = [];
-      // if (extractedData == null) {
-      //   return;
-      // }
+
+      if (extractedData == {}) {
+        return;
+      }
       url =
           'https://my-bazaar-fe792-default-rtdb.firebaseio.com/usersFav/$userId.json?auth=$authToken';
       final favResponse = await http.get(Uri.parse(url));
+      final List<ProductDataProvider> loadedProducts = [];
       final favResponseData = json.decode(favResponse.body);
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(ProductDataProvider(
-            id: prodId,
-            title: prodData['title'],
-            imageUrl: prodData['imageUrl'],
-            price: (prodData['price']),
-            description: prodData['description'],
-            isFav: favResponseData == null
-                ? false
-                : favResponseData[prodId] ?? false));
+          id: prodId,
+          title: prodData['title'],
+          imageUrl: prodData['imageUrl'],
+          price: (prodData['price']),
+          description: prodData['description'],
+          isFav: favResponseData == null
+              ? false
+              : favResponseData[prodId] ?? false,
+        ));
       });
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
+      print(error);
       throw error;
     }
   }
@@ -122,6 +127,7 @@ class ProductsDataProvider with ChangeNotifier {
       _items.add(addProduct);
       notifyListeners();
     } catch (error) {
+      print(error);
       throw error;
     }
   }
@@ -155,10 +161,10 @@ class ProductsDataProvider with ChangeNotifier {
         'https://my-bazaar-fe792-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
 
     final existingProductIndex =
-        _items.indexWhere((element) => element.id == id);
+        _items.indexWhere((product) => product.id == id);
     final existingProduct = _items[existingProductIndex];
     _items.removeWhere((element) => element.id == id);
-
+    notifyListeners();
     final response = await http.delete(Uri.parse(url));
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);

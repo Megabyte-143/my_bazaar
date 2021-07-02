@@ -32,8 +32,13 @@ class CartDataProvider with ChangeNotifier {
     return tAmount;
   }
 
-  void addItem(String productId, double price, String title) {
+  void addItem(
+    String productId,
+    double price,
+    String title,
+  ) {
     if (_items.containsKey(productId)) {
+      //change quantity
       _items.update(
           productId,
           (existingValue) => CartItem(
@@ -64,7 +69,7 @@ class CartDataProvider with ChangeNotifier {
     if (!_items.containsKey(id)) {
       return;
     }
-    if (_items[id]!.quantity> 1) {
+    if (_items[id]!.quantity > 1) {
       _items.update(
           id,
           (existingItem) => CartItem(

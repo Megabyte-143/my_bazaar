@@ -37,7 +37,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ProductsDataProvider>(context).fetchAndaddData().then((_) {
+      Provider.of<ProductsDataProvider>(context).fetchAndSetProducts().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -63,6 +63,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 }
               });
             },
+            icon: Icon(
+              Icons.more_vert,
+            ),
             itemBuilder: (ctx) => [
               PopupMenuItem(
                 child: Text('only fav'),

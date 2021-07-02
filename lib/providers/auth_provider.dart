@@ -11,7 +11,6 @@ class Auth with ChangeNotifier {
   String _token = "";
   String _userId = "";
   DateTime _expirayDate = DateTime.now();
-
   Timer _authTimer = Timer(Duration(seconds: 0), () {});
 
   bool get isAuth {

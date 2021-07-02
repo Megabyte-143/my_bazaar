@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProductDataProvider with ChangeNotifier {
@@ -8,9 +9,8 @@ class ProductDataProvider with ChangeNotifier {
   final String description;
   final String imageUrl;
   final double price;
-  // final authToken;
-
   bool isFav;
+  // final authToken;
 
   ProductDataProvider({
     required this.id,

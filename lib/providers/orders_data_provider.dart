@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'cart_data_provider.dart';
+
+import './cart_data_provider.dart';
 
 class OrderItem {
   final String id;
@@ -49,8 +50,6 @@ class OrdersDataProvider with ChangeNotifier {
     // if (response.body != "null") {
     //   extractedData = json.decode(response.body);
     // }
-
-    print(json.decode(response.body));
     extractedData.forEach((orderId, orderData) {
       loadedOrders.add(
         OrderItem(
