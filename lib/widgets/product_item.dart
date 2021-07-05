@@ -21,10 +21,14 @@ class ProductItem extends StatelessWidget {
                 arguments: productData.id);
           },
           child: Card(
-            child: FadeInImage(
-              placeholder: AssetImage('lib/assets/images/product-placeholder.png'),
-              image: NetworkImage(productData.imageUrl),
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: productData.id,
+              child: FadeInImage(
+                placeholder:
+                    AssetImage('lib/assets/images/product-placeholder.png'),
+                image: NetworkImage(productData.imageUrl),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
