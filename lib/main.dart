@@ -6,7 +6,7 @@ import './providers/products_data_provider.dart';
 import './providers/orders_data_provider.dart';
 import './providers/auth_provider.dart';
 
-import 'screens/products_overview_screen.dart';
+import './screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
