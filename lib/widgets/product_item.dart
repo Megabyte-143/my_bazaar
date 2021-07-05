@@ -21,8 +21,9 @@ class ProductItem extends StatelessWidget {
                 arguments: productData.id);
           },
           child: Card(
-            child: Image.network(
-              productData.imageUrl,
+            child: FadeInImage(
+              placeholder: AssetImage('lib/assets/images/product-placeholder.png'),
+              image: NetworkImage(productData.imageUrl),
               fit: BoxFit.cover,
             ),
           ),
@@ -35,7 +36,7 @@ class ProductItem extends StatelessWidget {
                 productData.isFav ? Icons.favorite : Icons.favorite_border,
               ),
               onPressed: () {
-                productData.toggleFav(auth.token,auth.userId);
+                productData.toggleFav(auth.token, auth.userId);
               },
             ),
           ),
