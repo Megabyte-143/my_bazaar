@@ -18,9 +18,12 @@ class _OrderItemState extends State<OrderItem> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
-      height: _expanded?min(widget.order.products.length * 20.0 + 1000,200):95,
-          child: Card(
-        margin: EdgeInsets.all(10),
+      height: _expanded
+          ? min(widget.order.products.length * 20.0 + 1000, 200)
+          : 110,
+      child: Card(
+        margin: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 8.0),
+        elevation: 5,
         child: Column(
           children: <Widget>[
             ListTile(
